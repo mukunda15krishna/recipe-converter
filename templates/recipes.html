@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>Recipe Dashboard</h1>
+
+</div>
+
+{% for recipe in recipes %}
+
+<div class="card">
+
+    <h2>
+    🍫 {{ recipe.name }}
+</h2>
+
+<p>
+    Total Ingredients:
+    <strong>
+        {{ recipe.ingredients|length }}
+    </strong>
+</p>
+
+    <a href="/recipe/{{ recipe.id }}">
+        <button>
+            View Recipe
+        </button>
+    </a>
+
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

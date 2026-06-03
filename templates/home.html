@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>Recipe Calculator</h1>
+
+    <form action="/calculate" method="post">
+
+        <label>Select Recipe</label>
+
+        <select name="recipe_id">
+
+            {% for recipe in recipes %}
+
+            <option value="{{ recipe.id }}">
+                {{ recipe.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Desired Weight (grams)</label>
+
+        <input
+            type="number"
+            name="desired_weight"
+            required>
+
+        <button type="submit">
+            Calculate Ingredients
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>
+        🍫 {{ recipe.name }}
+    </h1>
+
+</div>
+
+<div class="card">
+
+    <h2>Ingredients</h2>
+
+    <table>
+
+        <tr>
+            <th>Ingredient</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+        </tr>
+
+        {% for ingredient in recipe.ingredients %}
+
+        <tr>
+
+            <td>
+                {{ ingredient.name }}
+            </td>
+
+            <td>
+                {{ ingredient.quantity }}
+            </td>
+
+            <td>
+                {{ ingredient.unit }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+<div class="card">
+
+    <div class="action-links">
+
+        <a href="/recipes">
+            📊 Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

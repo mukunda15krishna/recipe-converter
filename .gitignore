@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+recipe_backup.db
+recipe_backup_v2.db
+recipe_backup_v3.db
+recipe_backup_v4.db
+
+.vscode/
