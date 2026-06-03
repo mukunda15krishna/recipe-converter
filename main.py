@@ -107,7 +107,7 @@ def login(
     if (
         username == "admin"
         and
-        password == "Admin123"
+        password == "brownie123"
     ):
 
         response = RedirectResponse(
@@ -174,7 +174,7 @@ def admin(
 
     recipes = db.query(Recipe).all()
 
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request,
         name="admin.html",
         context={
