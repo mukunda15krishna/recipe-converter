@@ -4,13 +4,22 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
+from fastapi import Depends
 
 from database import SessionLocal
 from models import Recipe, Ingredient
 from models import ProductionHistory
 from typing import List
 from openpyxl import Workbook
+from sqlalchemy.orm import Session
 
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 app = FastAPI()
@@ -29,7 +38,7 @@ def home(request: Request):
 
     recipes = db.query(Recipe).all()
 
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request,
         name="home.html",
         context={
@@ -37,14 +46,29 @@ def home(request: Request):
         }
     )
 
-@app.get("/login", response_class=HTMLResponse)
-def login_page(request: Request):
+    db.close()
 
-    return templates.TemplateResponse(
+    return response
+
+@app.get("/recipes", response_class=HTMLResponse)
+def recipes(request: Request):
+
+    db = SessionLocal()
+
+    recipes = db.query(Recipe).all()
+
+    response = templates.TemplateResponse(
         request=request,
-        name="login.html",
-        context={}
+        name="recipes.html",
+        context={
+            "recipes": recipes
+        }
     )
+
+    db.close()
+
+    return response
+
 
 @app.post("/login")
 def login(
@@ -158,20 +182,9 @@ def admin(
         }
     )
 
-@app.get("/recipes", response_class=HTMLResponse)
-def recipes(request: Request):
+    db.close()
 
-    db = SessionLocal()
-
-    recipes = db.query(Recipe).all()
-
-    return templates.TemplateResponse(
-        request=request,
-        name="recipes.html",
-        context={
-            "recipes": recipes
-        }
-    )
+    return response
 
 
 @app.get("/recipe/{recipe_id}",
@@ -187,7 +200,7 @@ def recipe_detail(
         Recipe.id == recipe_id
     ).first()
 
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request,
         name="recipe_detail.html",
         context={
@@ -195,6 +208,9 @@ def recipe_detail(
         }
     )
 
+    db.close()
+
+    return response
 
 
 @app.get("/delete_ingredient/{ingredient_id}")
@@ -210,6 +226,8 @@ def delete_ingredient(ingredient_id: int):
 
     if ingredient is None:
 
+        db.close()
+
         return HTMLResponse(
             "<h2>Ingredient Not Found</h2>"
         )
@@ -219,6 +237,8 @@ def delete_ingredient(ingredient_id: int):
     db.delete(ingredient)
 
     db.commit()
+
+    db.close()
 
     return RedirectResponse(
         url=f"/admin_recipe/{recipe_id}",
@@ -236,6 +256,8 @@ def delete_recipe(recipe_id: int):
 
     if recipe is None:
 
+        db.close()
+
         return HTMLResponse(
             "<h2>Recipe Not Found</h2>"
         )
@@ -247,6 +269,8 @@ def delete_recipe(recipe_id: int):
     db.delete(recipe)
 
     db.commit()
+
+    db.close()
 
     return RedirectResponse(
     url="/admin",
@@ -285,6 +309,7 @@ def edit_recipe(recipe_id: int):
 
     </form>
     """
+    db.close()
 
     return HTMLResponse(content=html)
 
@@ -305,6 +330,8 @@ def update_recipe(
     recipe.name = recipe_name
 
     db.commit()
+
+    db.close()
 
     return RedirectResponse(
         url=f"/admin_recipe/{recipe_id}",
@@ -334,6 +361,8 @@ def update_ingredient(
     recipe_id = ingredient.recipe_id
 
     db.commit()
+
+    db.close()
 
     return RedirectResponse(
         url=f"/admin_recipe/{recipe_id}",
@@ -399,6 +428,7 @@ def edit_ingredient(ingredient_id: int):
 
     </form>
     """
+    db.close()
 
     return HTMLResponse(content=html)
 
@@ -423,6 +453,8 @@ def add_ingredient(
     db.add(ingredient)
     db.commit()
 
+    db.close()
+
     return HTMLResponse(
         f"""
         <h2>Ingredient Added Successfully</h2>
@@ -445,6 +477,8 @@ def create_recipe(
 
     if recipe:
 
+        db.close()
+
         return HTMLResponse(
             """
             <h2>
@@ -465,6 +499,8 @@ def create_recipe(
 
     db.add(recipe)
     db.commit()
+
+    db.close()
 
     return HTMLResponse(
         """
@@ -512,6 +548,8 @@ def add_ingredient_admin(
 
         if current_name in existing_names:
 
+            db.close()
+
             return HTMLResponse(
                 f"""
                 <h2>
@@ -536,6 +574,7 @@ def add_ingredient_admin(
         db.add(ingredient)
 
     db.commit()
+    db.close()
 
     return HTMLResponse(
         """
@@ -555,23 +594,23 @@ def add_ingredient_admin(
 def admin_recipe(
     recipe_id: int,
     request: Request,
-    logged_in: str = Cookie(None)
+    logged_in: str = Cookie(None),
+    db: Session = Depends(get_db)
 ):
 
     if logged_in != "yes":
+
 
         return RedirectResponse(
             url="/login",
             status_code=302
         )
 
-    db = SessionLocal()
-
-    recipe = db.query(
-        Recipe
-    ).filter(
+    recipe = db.query(Recipe).filter(
         Recipe.id == recipe_id
     ).first()
+
+    
 
     return templates.TemplateResponse(
         request=request,
@@ -603,7 +642,9 @@ def save_recipe(
         db.add(recipe)
         db.commit()
         db.refresh(recipe)
-        db = SessionLocal()
+
+    recipe_id = recipe.id
+    
 
     existing_ingredients = db.query(
         Ingredient
@@ -625,6 +666,8 @@ def save_recipe(
         )
 
         if current_name in existing_names:
+
+            db.close()
 
             return HTMLResponse(
                 f"""
@@ -650,6 +693,8 @@ def save_recipe(
         db.add(ingredient)
 
     db.commit()
+
+    db.close()
 
     return HTMLResponse(
         """
@@ -713,6 +758,7 @@ def history(request: Request):
     Back To Dashboard
         </a>
     """
+    db.close()
 
     return HTMLResponse(content=html)
 
@@ -748,6 +794,8 @@ def export_excel():
     file_name = "Production_History.xlsx"
 
     wb.save(file_name)
+
+    db.close()
 
     return FileResponse(
         path=file_name,
@@ -814,5 +862,5 @@ def calculate(
 
     <a href="/">Back</a>
     """
-
+    db.close()
     return HTMLResponse(content=html)
