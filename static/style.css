@@ -88,3 +88,27 @@ a{
     font-weight:bold;
     color:#2c7be5;
 }
+
+.login-card{
+    max-width:400px;
+    margin:30px auto;
+}
+
+.login-input{
+    width:100%;
+    max-width:350px;
+}
+
+.login-btn{
+    display:block;
+    margin:auto;
+    width:180px;
+    height:45px;
+    font-size:16px;
+}
+
+.login-input{
+    width:calc(100% - 50px);
+    margin-left:0px;
+    margin-right:60px;
+}
