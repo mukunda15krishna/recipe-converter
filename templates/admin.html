@@ -4,57 +4,56 @@
 
 <div class="card">
 
-    <div class="dashboard-stats"
-     style="
-     display:flex;
-     gap:20px;
-     justify-content:space-between;
-     ">
 
-    <div class="stat-card">
-        <h3>📖 Recipes</h3>
-        <p>{{ recipes|length }}</p>
-    </div>
+    <h1>📊 Admin Dashboard</h1>
 
-    <div class="stat-card">
-        <h3>🥄 Ingredients</h3>
-        <p>{{ ingredient_count }}</p>
-    </div>
+    <div class="stats">
 
-    <div class="stat-card">
-        <h3>📜 History</h3>
-        <p>{{ history_count }}</p>
+        <div class="stat-box">
+            📖 Recipes: {{ recipe_count }}
+        </div>
+
+        <div class="stat-box">
+            🥄 Ingredients:  {{ ingredient_count }}
+        </div>
+
+        <div class="stat-box">
+            📜 History: {{ history_count }}
+        </div>
+
     </div>
 
 </div>
 
-    <div class="header-row">
+    <div class="card">
 
-        
-        <h1>➕𓌉◯𓇋Create New Recipe</h1>
+        <div class="header-row">
 
-        
+            
+            <h1>➕𓌉◯𓇋Create New Recipe</h1>
+    
+        </div>
+
+            <form action="/create_recipe" method="post">
+
+                <label>Recipe Name</label>
+
+                <input
+                    class="compact-name"
+                    type="text"
+                    name="recipe_name"
+                    placeholder="Recipe Name"
+                    required>
+
+                <button type="submit">
+                    Create Recipe
+                </button>
+
+            </form>
+
+    
 
     </div>
-
-    <form action="/create_recipe" method="post">
-
-        <label>Recipe Name</label>
-
-        <input
-            class="compact-name"
-            type="text"
-            name="recipe_name"
-            placeholder="Recipe Name"
-            required>
-
-        <button type="submit">
-            Create Recipe
-        </button>
-
-    </form>
-
-</div>
 
 
 

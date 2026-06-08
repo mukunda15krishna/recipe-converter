@@ -174,11 +174,26 @@ def admin(
 
     recipes = db.query(Recipe).all()
 
+    recipe_count = db.query(
+        Recipe
+    ).count()
+
+    ingredient_count = db.query(
+        Ingredient
+    ).count()
+
+    history_count = db.query(
+        ProductionHistory
+    ).count()
+
     response = templates.TemplateResponse(
         request=request,
         name="admin.html",
         context={
-            "recipes": recipes
+            "recipes": recipes,
+            "recipe_count": recipe_count,
+            "ingredient_count": ingredient_count,
+            "history_count": history_count
         }
     )
 
