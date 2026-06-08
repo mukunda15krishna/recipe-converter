@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>{{ recipe.name }}</h1>
+
+    <table>
+
+        <tr>
+            <th>Ingredient</th>
+            <th>Required Quantity</th>
+        </tr>
+
+        {% for item in calculated_ingredients %}
+
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.quantity }} {{ item.unit }}</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <a href="/">
+        ⬅ Back
+    </a>
+
+</div>
+
+{% endblock %}

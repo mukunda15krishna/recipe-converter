@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>📚 Production History</h1>
+
+    <table>
+
+        <tr>
+            <th>Date</th>
+            <th>Recipe</th>
+            <th>Desired Weight</th>
+        </tr>
+
+        {% for record in records %}
+
+        <tr>
+            <td>{{ record.created_at }}</td>
+            <td>{{ record.recipe_name }}</td>
+            <td>{{ record.desired_weight }} g</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <a href="/export_excel">
+        📊 Export Excel
+    </a>
+
+</div>
+
+{% endblock %}

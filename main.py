@@ -736,46 +736,17 @@ def history(request: Request):
         ProductionHistory.id.desc()
     ).all()
 
-    html = """
-    <h1>Production History</h1>
+    response = templates.TemplateResponse(
+        request=request,
+        name="history.html",
+        context={
+            "records": records
+        }
+    )
 
-    <table border='1' cellpadding='10'>
-
-    <tr>
-        <th>Date</th>
-        <th>Recipe</th>
-        <th>Desired Weight</th>
-    </tr>
-    """
-
-    for record in records:
-
-        html += f"""
-        <tr>
-            <td>{record.created_at}</td>
-            <td>{record.recipe_name}</td>
-            <td>{record.desired_weight} g</td>
-        </tr>
-        """
-
-    html += """
-        </table>
-
-        <br><br>
-
-        <a href='/export_excel'>
-            Export Excel
-        </a>
-
-        <br><br>
-
-        <a href='/recipes'>
-    Back To Dashboard
-        </a>
-    """
     db.close()
 
-    return HTMLResponse(content=html)
+    return response
 
 @app.get("/export_excel")
 def export_excel():
@@ -821,6 +792,7 @@ def export_excel():
 
 @app.post("/calculate", response_class=HTMLResponse)
 def calculate(
+    request: Request,
     recipe_id: int = Form(...),
     desired_weight: float = Form(...)
 ):
@@ -850,32 +822,30 @@ def calculate(
     db.add(history)
     db.commit()
 
-    html = f"""
-    <h1>{recipe.name}</h1>
-
-    <table border='1' cellpadding='10'>
-        <tr>
-            <th>Ingredient</th>
-            <th>Required Quantity</th>
-        </tr>
-    """
+    calculated_ingredients = []
 
     for ingredient in recipe.ingredients:
-        qty = round(ingredient.quantity * factor, 2)
 
-        html += f"""
-        <tr>
-            <td>{ingredient.name}</td>
-            <td>{qty} {ingredient.unit}</td>
-        </tr>
-        """
+        qty = round(
+            ingredient.quantity * factor,
+            2
+        )
 
-    html += """
-    </table>
+        calculated_ingredients.append(
+            {
+                "name": ingredient.name,
+                "quantity": qty,
+                "unit": ingredient.unit
+            }
+        )
 
-    <br>
-
-    <a href="/">Back</a>
-    """
     db.close()
-    return HTMLResponse(content=html)
+
+    return templates.TemplateResponse(
+    request=request,
+    name="calculation_result.html",
+    context={
+        "recipe": recipe,
+        "calculated_ingredients": calculated_ingredients
+    }
+)
