@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    ">
+
+        <h1>
+            📝 Edit Recipe Notes
+        </h1>
+
+        <a href="/admin_recipe/{{ recipe.id }}">
+            <button class="small-btn">
+                ← Back
+            </button>
+        </a>
+
+    </div>
+
+    <form
+        action="/update_notes/{{ recipe.id }}"
+        method="post"
+    >
+
+        <textarea
+            name="notes"
+            class="notes-editor"
+        >{{ recipe.notes or "" }}</textarea>
+
+        <br><br>
+
+        <button
+            type="submit"
+            class="small-btn"
+        >
+            💾 Save Notes
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

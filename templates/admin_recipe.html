@@ -33,6 +33,38 @@
 
 </div>
 
+<div class="card">  
+
+    <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+">
+
+    <h2>
+        📝 Recipe Notes
+    </h2>
+
+    <a href="/edit_notes/{{ recipe.id }}">
+        <button class="small-btn">
+            ✏️ Edit Notes
+        </button>
+    </a>
+
+</div>
+
+
+
+    <div style="
+        border:1px solid #ccc;
+        padding:10px;
+        min-height:150px;
+        white-space:pre-wrap;
+    ">{{ recipe.notes or "No notes available" }}
+    </div>
+
+</div>
+
 <div class="card">
 
     <h2>

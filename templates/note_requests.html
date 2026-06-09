@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>
+        Pending Note Requests
+    </h1>
+
+</div>
+
+{% for item in requests %}
+
+<div class="card">
+
+    <h3>
+        Recipe:
+        {{ item.recipe.name }}
+    </h3>
+
+    <p>
+        Request Type:
+        {{ item.request_type }}
+    </p>
+
+    <p>
+        Status:
+        {{ item.status }}
+    </p>
+
+    <div style="
+        border:1px solid #ddd;
+        padding:15px;
+        white-space:pre-wrap;
+    ">{{ item.note_content }}</div>
+
+    <br>
+
+<a href="/approve_note_request/{{ item.id }}">
+    <button>
+        ✅ Approve
+    </button>
+</a>
+
+<a href="/reject_note_request/{{ item.id }}">
+    <button class="delete-btn">
+        ❌ Reject
+    </button>
+</a>
+</div>
+
+{% endfor %}
+
+{% endblock %}

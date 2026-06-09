@@ -7,7 +7,9 @@ from fastapi.responses import RedirectResponse
 from fastapi import Depends
 
 from database import SessionLocal
-from models import Recipe, Ingredient
+from models import Recipe
+from models import Ingredient
+from models import NoteRequest
 from models import ProductionHistory
 from typing import List
 from openpyxl import Workbook
@@ -201,6 +203,93 @@ def admin(
 
     return response
 
+ # admin note requests page
+
+@app.get("/admin/note_requests",
+    response_class=HTMLResponse
+)
+def admin_note_requests(
+    request: Request
+):
+
+    db = SessionLocal()
+
+    requests = db.query(
+        NoteRequest
+    ).filter(
+        NoteRequest.status == "PENDING"
+    ).all()
+
+    response = templates.TemplateResponse(
+        request=request,
+        name="note_requests.html",
+        context={
+            "requests": requests
+        }
+    )
+
+    db.close()
+
+    return response
+
+# approve note request
+@app.get("/approve_note_request/{request_id}")
+def approve_note_request(
+    request_id: int
+):
+
+    db = SessionLocal()
+
+    note_request = db.query(
+        NoteRequest
+    ).filter(
+        NoteRequest.id == request_id
+    ).first()
+
+    recipe = db.query(
+        Recipe
+    ).filter(
+        Recipe.id == note_request.recipe_id
+    ).first()
+
+    recipe.notes = note_request.note_content
+
+    note_request.status = "APPROVED"
+
+    db.commit()
+
+    db.close()
+
+    return RedirectResponse(
+        url="/admin/note_requests",
+        status_code=302
+    )
+
+
+# reject note request
+@app.get("/reject_note_request/{request_id}")
+def reject_note_request(
+    request_id: int
+):
+
+    db = SessionLocal()
+
+    note_request = db.query(
+        NoteRequest
+    ).filter(
+        NoteRequest.id == request_id
+    ).first()
+
+    note_request.status = "REJECTED"
+
+    db.commit()
+
+    db.close()
+
+    return RedirectResponse(
+        url="/admin/note_requests",
+        status_code=302
+    )
 
 @app.get("/recipe/{recipe_id}",
          response_class=HTMLResponse)
@@ -374,6 +463,63 @@ def update_ingredient(
     ingredient.unit = unit
 
     recipe_id = ingredient.recipe_id
+
+    db.commit()
+
+    db.close()
+
+    return RedirectResponse(
+        url=f"/admin_recipe/{recipe_id}",
+        status_code=302
+    )
+
+@app.get(
+    "/edit_notes/{recipe_id}",
+    response_class=HTMLResponse
+)
+def edit_notes(
+    request: Request,
+    recipe_id: int
+):
+
+    db = SessionLocal()
+
+    recipe = db.query(
+        Recipe
+    ).filter(
+        Recipe.id == recipe_id
+    ).first()
+
+    response = templates.TemplateResponse(
+        request=request,
+        name="edit_notes.html",
+        context={
+            "recipe": recipe
+        }
+    )
+
+    db.close()
+
+    return response
+
+@app.post("/update_notes/{recipe_id}")
+def update_notes(
+    recipe_id: int,
+    notes: str = Form("")
+):
+
+    db = SessionLocal()
+
+    recipe = db.query(
+        Recipe
+    ).filter(
+        Recipe.id == recipe_id
+    ).first()
+
+    recipe.notes = "\n".join(
+        line.strip()
+        for line in notes.splitlines()
+    )
 
     db.commit()
 
@@ -634,6 +780,8 @@ def admin_recipe(
             "recipe": recipe
         }
     )
+
+
 
 @app.post("/save_recipe")
 def save_recipe(

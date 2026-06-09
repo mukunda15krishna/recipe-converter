@@ -3,9 +3,12 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
-
+from sqlalchemy import Text
+from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 
+
+from datetime import datetime
 from database import Base
 
 
@@ -14,7 +17,13 @@ class Recipe(Base):
     __tablename__ = "recipes"
 
     id = Column(Integer, primary_key=True)
+
     name = Column(String, unique=True)
+
+    notes = Column(
+        Text,
+        nullable=True
+    )
 
     ingredients = relationship(
         "Ingredient",
@@ -22,6 +31,10 @@ class Recipe(Base):
         cascade="all, delete"
     )
 
+    note_requests = relationship(
+    "NoteRequest",
+    back_populates="recipe"
+)
 
 class Ingredient(Base):
 
@@ -45,6 +58,8 @@ class Ingredient(Base):
         back_populates="ingredients"
     )
 
+
+
 class ProductionHistory(Base):
 
     __tablename__ = "production_history"
@@ -61,4 +76,32 @@ class ProductionHistory(Base):
 
     created_at = Column(
         String
+    )
+
+class NoteRequest(Base):
+
+    __tablename__ = "note_requests"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    recipe_id = Column(
+        Integer,
+        ForeignKey("recipes.id")
+    )
+
+    request_type = Column(String)
+
+    note_content = Column(Text)
+
+    status = Column(String)
+
+    created_at = Column(String)
+
+    recipe = relationship(
+        "Recipe",
+        back_populates="note_requests"
     )

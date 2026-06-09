@@ -5,6 +5,11 @@ from sqlalchemy.pool import NullPool
 
 DATABASE_URL = "sqlite:///recipe.db"
 
+import os
+
+print("DATABASE PATH:")
+print(os.path.abspath("recipe.db"))
+
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False},
