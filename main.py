@@ -5,10 +5,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
 from fastapi import Depends
+from datetime import datetime
+from fastapi import Cookie
 
 from database import SessionLocal
-from models import Recipe
-from models import Ingredient
+from models import (
+    Recipe,
+    Ingredient,
+    ProductionHistory,
+    NoteRequest
+)
 from models import NoteRequest
 from models import ProductionHistory
 from typing import List
@@ -106,34 +112,6 @@ def login(
         """
     )
 
-    if (
-        username == "admin"
-        and
-        password == "brownie123"
-    ):
-
-        response = RedirectResponse(
-            url="/admin",
-            status_code=302
-        )
-
-        response.set_cookie(
-            key="logged_in",
-            value="yes"
-        )
-
-        return response
-
-    return HTMLResponse(
-        """
-        <h2>Invalid Login</h2>
-
-        <a href='/login'>
-            Try Again
-        </a>
-        """
-    )
-
 @app.get("/logout")
 def logout():
 
@@ -203,14 +181,76 @@ def admin(
 
     return response
 
+
+#submit note request
+@app.post("/submit_note_request")
+def submit_note_request(
+    recipe_id: int = Form(...),
+    note_content: str = Form(...)
+):
+
+    db = SessionLocal()
+
+    request = NoteRequest(
+        recipe_id=recipe_id,
+        submitted_by="User",
+        request_type="USER_SUGGESTION",
+        note_content=note_content,
+        status="PENDING",
+        created_at=datetime.now().strftime(
+            "%d-%m-%Y %H:%M"
+        )
+    )
+
+    db.add(request)
+
+    db.commit()
+
+    db.close()
+
+    return HTMLResponse(
+    """
+    <div style="
+        text-align:center;
+        margin-top:100px;
+        font-family:Arial;
+    ">
+
+        <h1>
+            ✅ Note Request Submitted Successfully
+        </h1>
+
+        <p>
+            Your note suggestion has been sent to the administrator for review.
+        </p>
+
+        <br>
+
+        <a href="/">
+            Return Home
+        </a>
+
+    </div>
+    """
+)
+
  # admin note requests page
 
-@app.get("/admin/note_requests",
+@app.get(
+    "/admin/note_requests",
     response_class=HTMLResponse
 )
 def admin_note_requests(
-    request: Request
+    request: Request,
+    logged_in: str = Cookie(None)
 ):
+
+    if logged_in != "yes":
+
+        return RedirectResponse(
+            url="/login",
+            status_code=302
+        )
 
     db = SessionLocal()
 
@@ -232,11 +272,19 @@ def admin_note_requests(
 
     return response
 
-# approve note request
+# approve approve note request
 @app.get("/approve_note_request/{request_id}")
 def approve_note_request(
-    request_id: int
+    request_id: int,
+    logged_in: str = Cookie(None)
 ):
+
+    if logged_in != "yes":
+
+        return RedirectResponse(
+            url="/login",
+            status_code=302
+        )
 
     db = SessionLocal()
 
@@ -266,11 +314,19 @@ def approve_note_request(
     )
 
 
-# reject note request
+# reject reject note request
 @app.get("/reject_note_request/{request_id}")
 def reject_note_request(
-    request_id: int
+    request_id: int,
+    logged_in: str = Cookie(None)
 ):
+
+    if logged_in != "yes":
+
+        return RedirectResponse(
+            url="/login",
+            status_code=302
+        )
 
     db = SessionLocal()
 

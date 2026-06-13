@@ -19,21 +19,51 @@
         {{ item.recipe.name }}
     </h3>
 
-    <p>
-        Request Type:
-        {{ item.request_type }}
-    </p>
 
-    <p>
-        Status:
-        {{ item.status }}
-    </p>
+<p>
+    <strong>Submitted By:</strong>
+    <br>
+    {{ item.submitted_by }}
+</p>
 
-    <div style="
-        border:1px solid #ddd;
-        padding:15px;
-        white-space:pre-wrap;
-    ">{{ item.note_content }}</div>
+<p>
+    <strong>Submitted On:</strong>
+    <br>
+    {{ item.created_at }}
+</p>
+
+<p>
+    <strong>Status:</strong>
+    <br>
+    {{ item.status }}
+</p>
+
+<p>
+    <strong>Current Note:</strong>
+</p>
+
+<div style="
+    border:1px solid #ddd;
+    padding:15px;
+    margin-bottom:15px;
+    background:#f8f8f8;
+    white-space:pre-wrap;
+">
+    {{ item.recipe.notes or "No notes available" }}
+</div>
+
+<p>
+    <strong>Suggested Change:</strong>
+</p>
+
+<div style="
+    border:1px solid #4CAF50;
+    padding:15px;
+    background:#f6fff6;
+    white-space:pre-wrap;
+">
+    {{ item.note_content }}
+</div>
 
     <br>
 

@@ -100,6 +100,8 @@ class NoteRequest(Base):
     status = Column(String)
 
     created_at = Column(String)
+    
+    submitted_by = Column(String)
 
     recipe = relationship(
         "Recipe",
