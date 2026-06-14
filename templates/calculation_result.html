@@ -30,13 +30,18 @@
         📝 Recipe Notes
     </h2>
 
-    <div style="
-        border:1px solid #ddd;
-        padding:15px;
-        min-height:100px;
-        white-space:pre-wrap;
-    ">{{ recipe.notes or "No notes available" }}</div>
+    <form
+        action="/submit_note_request"
+        method="post"
+>
+    
 
+    <textarea
+        name="note_content"
+        class="suggestion-editor"
+        readonly
+        >{{ recipe.notes or "No notes available" }}</textarea>
+    
     <br>
 
     <h2>
@@ -47,12 +52,6 @@
         action="/submit_note_request"
         method="post"
 >
-
-        <input
-        type="hidden"
-        name="recipe_id"
-        value="{{ recipe.id }}"
-    >
 
     <textarea
         name="note_content"

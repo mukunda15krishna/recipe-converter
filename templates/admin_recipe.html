@@ -52,16 +52,19 @@
     </a>
 
 </div>
+    
 
+<form
+        action="/submit_note_request"
+        method="post"
+>
 
-
-    <div style="
-        border:1px solid #ccc;
-        padding:10px;
-        min-height:150px;
-        white-space:pre-wrap;
-    ">{{ recipe.notes or "No notes available" }}
-    </div>
+    <textarea
+        name="note_content"
+        class="suggestion-editor"
+        Required
+        >{{ recipe.notes or "No notes available" }}</textarea>
+    
 
 </div>
 

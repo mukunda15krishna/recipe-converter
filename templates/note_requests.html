@@ -42,30 +42,24 @@
     <strong>Current Note:</strong>
 </p>
 
-<div style="
-    border:1px solid #ddd;
-    padding:15px;
-    margin-bottom:15px;
-    background:#f8f8f8;
-    white-space:pre-wrap;
-">
-    {{ item.recipe.notes or "No notes available" }}
-</div>
+
+    <textarea  
+            class="suggestion-editor"
+            readonly 
+        >{{ item.recipe.notes or "No notes available" }}</textarea>
 
 <p>
     <strong>Suggested Change:</strong>
 </p>
 
-<div style="
-    border:1px solid #4CAF50;
-    padding:15px;
-    background:#f6fff6;
-    white-space:pre-wrap;
-">
-    {{ item.note_content }}
-</div>
+
+    <textarea 
+            class="suggestion-editor"
+            readonly 
+        >{{ item.note_content or "No notes available" }}</textarea>
 
     <br>
+
 
 <a href="/approve_note_request/{{ item.id }}">
     <button>

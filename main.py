@@ -30,7 +30,7 @@ def get_db():
         db.close()
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
 app.mount(
     "/static",
     StaticFiles(directory="static"),
@@ -236,15 +236,15 @@ def submit_note_request(
 
  # admin note requests page
 
-@app.get(
-    "/admin/note_requests",
+@app.get("/admin/note_requests",
     response_class=HTMLResponse
 )
 def admin_note_requests(
     request: Request,
     logged_in: str = Cookie(None)
 ):
-
+    print("Admin Note Requests page opened")
+    
     if logged_in != "yes":
 
         return RedirectResponse(
