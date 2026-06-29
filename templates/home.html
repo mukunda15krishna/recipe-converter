@@ -10,7 +10,12 @@
 
         <label>Select Recipe</label>
 
-        <select name="recipe_id">
+        <br>
+
+        <select 
+            class="form-half"
+            name="recipe_id"
+            required>
 
             {% for recipe in recipes %}
 
@@ -22,15 +27,26 @@
 
         </select>
 
+        <br><br>
+
         <label>Desired Weight (grams)</label>
 
+        <br>
+
         <input
+            class="form-half"
             type="number"
             name="desired_weight"
+            min="1"
+            step="0.01"
+            placeholder="Enter Desired Weight"
+            oninput="if(this.value < 1) this.value='';"
             required>
 
+        <br><br>
+
         <button type="submit">
-            Calculate Ingredients
+            ⌨ Calculate Ingredients
         </button>
 
     </form>

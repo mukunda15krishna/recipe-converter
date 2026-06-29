@@ -97,6 +97,7 @@ a{
 .login-input{
     width:100%;
     max-width:350px;
+    box-sizing:border-box;
 }
 
 .login-btn{
@@ -105,12 +106,6 @@ a{
     width:180px;
     height:45px;
     font-size:16px;
-}
-
-.login-input{
-    width:calc(100% - 50px);
-    margin-left:0px;
-    margin-right:60px;
 }
 
 .notes-editor {
@@ -167,4 +162,51 @@ a{
     resize: vertical;
 
     box-sizing: border-box;
+}
+
+.form-half {
+
+    width: 60%;
+
+    min-width: 350px;
+
+}
+
+.password-container {
+
+    position: relative;
+
+    width:100%;
+
+    max-width:350px;
+
+
+}
+
+.password-container input {
+
+    width: 100%;
+
+    padding-right: 45px;
+
+    box-sizing: border-box;
+
+}
+
+.toggle-password {
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform: translateY(-65%);
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    user-select: none;
+
 }

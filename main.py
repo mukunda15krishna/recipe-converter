@@ -1002,6 +1002,23 @@ def calculate(
 ):
     db = SessionLocal()
 
+    # Validate desired weight
+    if desired_weight <= 0:
+
+        db.close()
+
+        return HTMLResponse(
+            """
+            <h2>❌ Desired weight must be greater than 0 grams.</h2>
+
+            <br>
+
+            <a href="/">
+                ⬅ Go Back
+            </a>
+            """
+        )
+
     recipe = db.query(Recipe).filter(
         Recipe.id == recipe_id
     ).first()

@@ -13,6 +13,8 @@
 
         <label>Username</label>
 
+
+
         <input
             class="login-input"
             type="text"
@@ -21,11 +23,21 @@
 
         <label>Password</label>
 
+            <div class="password-container">
+
         <input
             class="login-input"
             type="password"
+            id="password"
             name="password"
             required>
+
+            <span
+                class="toggle-password"
+                onclick="togglePassword()">👁️
+            </span>
+
+        </div>
 
         <button 
             type="submit"
@@ -37,6 +49,28 @@
     </form>
 
 </div>
+
+<script>
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+    }
+    else {
+
+        password.type = "password";
+
+    }
+
+}
+
+</script>
 
 {% endblock %}
 
