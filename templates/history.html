@@ -6,6 +6,31 @@
 
     <h1>📚 Production History</h1>
 
+    <form method="get" action="/history" class="history-filter-form">
+
+        <div class="history-row">
+
+            <div class="history-field tiny-field">
+                <label>From</label>
+                <input type="date" name="date_from" value="{{ date_from }}">
+            </div>
+
+            <div class="history-field tiny-field">
+                <label>To</label>
+                <input type="date" name="date_to" value="{{ date_to }}">
+            </div>
+
+            <div class="history-actions tiny-actions">
+                <button type="submit" class="small-btn tiny-btn">Search</button>
+                <a href="/history" class="btn small-btn reset-btn tiny-btn">Reset</a>
+            </div>
+
+        </div>
+
+    </form>
+
+    {% if records %}
+
     <table>
 
         <tr>
@@ -19,16 +44,24 @@
         <tr>
             <td>{{ record.created_at }}</td>
             <td>{{ record.recipe_name }}</td>
-            <td>{{ record.desired_weight }} g</td>
+            <td>{{ record.desired_weight }} gms</td>
         </tr>
 
         {% endfor %}
 
     </table>
 
+    {% else %}
+
+    <div class="history-empty">
+        <p>Use the filters above and click Search to view production history.</p>
+    </div>
+
+    {% endif %}
+
     <br>
 
-    <a href="/export_excel">
+    <a href="/export_excel" class="btn small-btn secondary-btn">
         📊 Export Excel
     </a>
 
