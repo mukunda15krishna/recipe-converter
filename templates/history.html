@@ -2,68 +2,87 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card history-card">
 
-    <h1>📚 Production History</h1>
+    <h1 class="history-title">📚 Production History</h1>
 
     <form method="get" action="/history" class="history-filter-form">
+        <div class="history-toolbar">
 
-        <div class="history-row">
-
-            <div class="history-field tiny-field">
-                <label>From</label>
+            <div class="history-field">
+                <label>📅 From</label>
                 <input type="date" name="date_from" value="{{ date_from }}">
             </div>
 
-            <div class="history-field tiny-field">
-                <label>To</label>
+            <div class="history-field">
+                <label>📅 To</label>
                 <input type="date" name="date_to" value="{{ date_to }}">
             </div>
 
-            <div class="history-actions tiny-actions">
-                <button type="submit" class="small-btn tiny-btn bakery-btn-dark">Search</button>
-                <a href="/history" class="btn small-btn reset-btn tiny-btn bakery-btn-mid">Reset</a>
+            <div class="history-field rows-field">
+                <label>📄 Rows</label>
+                <select name="rows">
+                    <option value="10" {% if rows == 10 %}selected{% endif %}>10</option>
+                    <option value="20" {% if rows == 20 %}selected{% endif %}>20</option>
+                    <option value="30" {% if rows == 30 %}selected{% endif %}>30</option>
+                    <option value="50" {% if rows == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if rows == 100 %}selected{% endif %}>100</option>
+                </select>
             </div>
 
-        </div>
+            <div class="history-field search-field">
+                <label>🔍 Search</label>
+                <input type="text" name="search" value="{{ search }}" placeholder="Search recipe">
+            </div>
 
+            <div class="history-actions">
+                <button type="submit" class="small-btn bakery-btn-dark">🔍 Search</button>
+                <a href="/history" class="small-btn bakery-btn-mid">🔄 Reset</a>
+            </div>
+        </div>
     </form>
 
+    <div class="history-divider"></div>
+
     {% if records %}
-
-    <table>
-
-        <tr>
-            <th>Date</th>
-            <th>Recipe</th>
-            <th>Desired Weight</th>
-        </tr>
-
-        {% for record in records %}
-
-        <tr>
-            <td>{{ record.created_at }}</td>
-            <td>{{ record.recipe_name }}</td>
-            <td>{{ record.desired_weight }} gms</td>
-        </tr>
-
-        {% endfor %}
-
-    </table>
-
+    <div class="history-table-wrap">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Recipe</th>
+                    <th>Desired Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.created_at }}</td>
+                    <td>{{ record.recipe_name }}</td>
+                    <td>{{ record.desired_weight }} gms</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
-
     <div class="history-empty">
         <p>Use the filters above and click Search to view production history.</p>
     </div>
-
     {% endif %}
 
-    <br>
+    <div class="history-footer">
+        <span class="history-summary">Showing {{ records|length }} record(s)</span>
 
-    <a href="/export_excel" class="btn small-btn secondary-btn">
-        📊 Export Excel
-    </a>
+        <div class="history-footer-actions">
+            <a href="/export_excel" class="btn small-btn secondary-btn">📊 Export Excel</a>
+
+            <div class="history-page-nav">
+                <button type="button" class="page-btn" disabled>◀ Previous</button>
+                <button type="button" class="page-btn" disabled>Next ▶</button>
+            </div>
+        </div>
+    </div>
 
 </div>
 

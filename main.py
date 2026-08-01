@@ -928,41 +928,63 @@ def save_recipe(
         </a>
         """
     )
-
 @app.get("/history", response_class=HTMLResponse)
 def history(
     request: Request,
     date_from: str | None = None,
     date_to: str | None = None,
-    search: str | None = None
+    search: str | None = None,
+    rows: int = 20
 ):
+
     db = SessionLocal()
 
     records = []
 
     if date_from or date_to or search:
+
         all_records = db.query(
             ProductionHistory
         ).order_by(
             ProductionHistory.id.desc()
         ).all()
 
-        date_from_obj = datetime.strptime(date_from, "%Y-%m-%d").date() if date_from else None
-        date_to_obj = datetime.strptime(date_to, "%Y-%m-%d").date() if date_to else None
+        date_from_obj = (
+            datetime.strptime(date_from, "%Y-%m-%d").date()
+            if date_from else None
+        )
+
+        date_to_obj = (
+            datetime.strptime(date_to, "%Y-%m-%d").date()
+            if date_to else None
+        )
 
         for record in all_records:
+
             try:
-                record_date = datetime.strptime(record.created_at, "%d-%m-%Y %H:%M").date()
+                record_date = datetime.strptime(
+                    record.created_at,
+                    "%d-%m-%Y %H:%M"
+                ).date()
+
             except (TypeError, ValueError):
                 continue
 
             if date_from_obj and record_date < date_from_obj:
                 continue
+
             if date_to_obj and record_date > date_to_obj:
                 continue
-            if search and search.strip().lower() not in (record.recipe_name or "").lower():
+
+            if search and search.strip().lower() not in (
+                record.recipe_name or ""
+            ).lower():
                 continue
+
             records.append(record)
+
+        # Limit the number of records displayed
+        records = records[:rows]
 
     response = templates.TemplateResponse(
         request=request,
@@ -971,7 +993,8 @@ def history(
             "records": records,
             "date_from": date_from or "",
             "date_to": date_to or "",
-            "search": search or ""
+            "search": search or "",
+            "rows": rows
         }
     )
 
