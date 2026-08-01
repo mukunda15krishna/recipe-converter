@@ -91,7 +91,16 @@
 
             <td>{{ ingredient.quantity }}</td>
 
-            <td>{{ ingredient.unit }}</td>
+            <td>
+                {% set unit = ingredient.unit|lower %}
+                {% if unit == 'g' %}
+                    grms
+                {% elif unit == 'ml' %}
+                    mls
+                {% else %}
+                    {{ ingredient.unit }}
+                {% endif %}
+            </td>
 
             <td>
 

@@ -8,30 +8,45 @@
 
 </div>
 
+<div class="recipe-grid">
+
 {% for recipe in recipes %}
 
-<div class="card">
+<div class="card recipe-item">
 
-    <h2>
-    🍫 {{ recipe.name }}
-</h2>
+    {% if recipe.name == "Brownie" %}
+        <img src="/static/Screenshot%202026-07-31%20223842.png" alt="Brownie" class="recipe-thumb">
+    {% endif %}
 
-<p>
-    Total Ingredients:
-    <strong>
-        {{ recipe.ingredients|length }}
-    </strong>
-</p>
+    <div class="recipe-copy">
+        <h2>
+            {% if recipe.name == "Brownie" %}
+                {{ recipe.name }}
+            {% else %}
+                🍫 {{ recipe.name }}
+            {% endif %}
+        </h2>
 
-    <a href="/recipe/{{ recipe.id }}">
-        <button>
-            View Recipe
-        </button>
-    </a>
+        <div class="recipe-actions-row">
+            <p>
+                Total Ingredients:
+                <strong>
+                    {{ recipe.ingredients|length }}
+                </strong>
+            </p>
 
+            <a href="/recipe/{{ recipe.id }}">
+                <button class="bakery-btn-warm">
+                    View Recipe
+                </button>
+            </a>
+        </div>
+    </div>
 
 </div>
 
 {% endfor %}
+
+</div>
 
 {% endblock %}

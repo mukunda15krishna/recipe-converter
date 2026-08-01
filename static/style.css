@@ -1,3 +1,14 @@
+:root {
+    --bakery-brown-dark: #4d2c1a;
+    --bakery-brown-mid: #7a4a2a;
+    --bakery-brown-light: #c18a57;
+    --bakery-brown-hover: #342015;
+    --bakery-brown-espresso: #2b160f;
+    --bakery-brown-cocoa: #6a3d2a;
+    --bakery-brown-caramel: #a86a3d;
+    --bakery-brown-golden: #d4a06d;
+}
+
 body{
     font-family: Arial, sans-serif;
     background-color:#f4f6f9;
@@ -20,6 +31,49 @@ body{
 
 h1{
     color:#333;
+}
+
+.recipe-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(300px, 1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.recipe-item {
+    min-height:220px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.recipe-title-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:6px;
+}
+
+.recipe-thumb {
+    width:2in;
+    height:2in;
+    max-width:2in;
+    max-height:2in;
+    object-fit:cover;
+    border-radius:5px;
+    border:1px solid #d7d7d7;
+    box-shadow:0 2px 4px rgba(0,0,0,0.08);
+    flex-shrink:0;
+    display:block;
+}
+
+.recipe-title-row h2 {
+    margin:0;
+    display:flex;
+    align-items:center;
+    line-height:1.2;
+    font-size:2rem;
 }
 
 .history-filter-form {
@@ -94,7 +148,11 @@ h1{
 }
 
 button,
-.btn {
+.btn,
+.small-btn,
+.tiny-btn,
+.reset-btn,
+.secondary-btn {
     border:none;
     border-radius:6px;
     padding:8px 14px;
@@ -104,21 +162,49 @@ button,
     align-items:center;
     justify-content:center;
     cursor:pointer;
+    background:linear-gradient(135deg, var(--bakery-brown-dark) 0%, var(--bakery-brown-mid) 100%);
+    color:#ffffff;
+    box-shadow:0 2px 6px rgba(77, 44, 26, 0.2);
 }
 
-button {
-    background:linear-gradient(135deg, #1f1f1f 0%, #8b5e34 100%);
-    color:#ffffff;
+.bakery-btn-dark {
+    background:linear-gradient(135deg, #2b160f 0%, #4d2c1a 100%) !important;
+    color:#fff !important;
 }
 
-.reset-btn {
-    background:linear-gradient(135deg, #4b4b4b 0%, #c38a5d 100%);
-    color:#ffffff;
+.bakery-btn-mid {
+    background:linear-gradient(135deg, #6a3d2a 0%, #7a4a2a 100%) !important;
+    color:#fff !important;
 }
 
-.secondary-btn {
-    background:linear-gradient(135deg, #1f1f1f 0%, #8b5e34 100%);
-    color:#ffffff;
+.bakery-btn-warm {
+    background:linear-gradient(135deg, #9a6237 0%, #c18a57 100%) !important;
+    color:#fffaf5 !important;
+}
+
+button:hover,
+.btn:hover,
+.small-btn:hover,
+.tiny-btn:hover,
+.reset-btn:hover,
+.secondary-btn:hover,
+.bakery-btn-dark:hover,
+.bakery-btn-mid:hover,
+.bakery-btn-warm:hover {
+    opacity:0.95;
+    transform:translateY(-1px);
+}
+
+.bakery-btn-dark:hover {
+    background:linear-gradient(135deg, #4d2c1a 0%, #2b160f 100%) !important;
+}
+
+.bakery-btn-mid:hover {
+    background:linear-gradient(135deg, #7a4a2a 0%, #6a3d2a 100%) !important;
+}
+
+.bakery-btn-warm:hover {
+    background:linear-gradient(135deg, #c18a57 0%, #9a6237 100%) !important;
 }
 
 .small-btn {
@@ -133,8 +219,8 @@ table{
 }
 
 th{
-    background:#e9e9e9;
-    color:#111111;
+    background:#7a4a2a;
+    color:#ffffff;
     padding:12px;
 }
 
