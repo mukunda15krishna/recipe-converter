@@ -56,27 +56,49 @@
 
 
 
-<div class="card">
+<div class="admin-layout">
 
-    <h1>🥄 Add Ingredient</h1>
+    <div class="card">
 
-    <form action="/add_ingredient_admin" method="post">
+        <h1>🥄 Add Ingredient</h1>
 
-        <label>Select Recipe</label>
+        <form action="/add_ingredient_admin" method="post">
 
-        <select name="recipe_id" required>
+            <label>Select Recipe</label>
 
-            {% for recipe in recipes %}
+            <select name="recipe_id" required>
 
-            <option value="{{ recipe.id }}">
-                {{ recipe.name }}
-            </option>
+                {% for recipe in recipes %}
 
-            {% endfor %}
+                <option value="{{ recipe.id }}">
+                    {{ recipe.name }}
+                </option>
 
-        </select>
+                {% endfor %}
 
-        <div id="ingredient-container">
+            </select>
+
+            <div class="compact-row" style="margin-top: 12px; margin-bottom: 12px;">
+                <input
+                    class="compact-qty"
+                    type="number"
+                    step="0.01"
+                    name="output_quantity"
+                    placeholder="Recipe output qty"
+                    value="0">
+
+                <select
+                    class="compact-unit"
+                    name="output_unit">
+                    <option value="g">Gm(s)</option>
+                    <option value="ml">Ml(s)</option>
+                    <option value="pcs">Pcs</option>
+                    <option value="Tspn">Tspn (teaspoon)</option>
+                    <option value="cup(s)">cup(s)</option>
+                </select>
+            </div>
+
+            <div id="ingredient-container">
 
         <div class="compact-row">
 
@@ -101,8 +123,9 @@
             required>
             <option value="g">Gm(s)</option>
             <option value="ml">Ml(s)</option>
+            <option value="ml">Pcs</option>
             <option value="Tspn">Tspn (teaspoon)</option>
-            <option value="cup">cup</option>
+            <option value="cup(s)">cup(s)</option>
         </select>
         <button
         type="button"
@@ -115,24 +138,22 @@
 
 </div>
 
-        <button 
-        type="button"
-            onclick="addRow()" class="bakery-btn-mid">
-            ➕ Add Row
+            <button 
+            type="button"
+                onclick="addRow()" class="bakery-btn-mid">
+                ➕ Add Row
+            </button>
+    <br> <br>
+            <button type="submit" class="bakery-btn-warm">
+        Add Ingredient
         </button>
-<br> <br>
-        <button type="submit" class="bakery-btn-warm">
-    Add Ingredient
-    </button>
-    
+        
 
-    </form>
+        </form>
 
-</div>
+    </div>
 
-
-
-<div class="card">
+    <div class="card">
 
     <h1>
         🛠 Manage Existing Recipes
@@ -170,28 +191,16 @@
         🛠 Manage Recipe
     </button>
 
+    </div>
+
 </div>
 
-
-</div>
 <script>
-
 function addRow() {
-
-    const container =
-        document.getElementById(
-            "ingredient-container"
-        );
-
-    const row =
-        document.createElement("div");
-
-    row.className =
-        "compact-row";
-
+    const container = document.getElementById("ingredient-container");
+    const row = document.createElement("div");
+    row.className = "compact-row";
     row.innerHTML = `
-        
-        
         <input
             class="compact-name"
             type="text"
@@ -211,174 +220,50 @@ function addRow() {
             class="compact-unit"
             name="unit"
             required>
-                <option value="g">Gm(s)</option>
-                <option value="ml">Ml(s)</option>
+            <option value="g">Gm(s)</option>
+            <option value="ml">Ml(s)</option>
+            <option value="pcs">Pcs</option>
             <option value="Tspn">Tspn (teaspoon)</option>
-            <option value="cup">cup</option>
+            <option value="cup(s)">cup(s)</option>
         </select>
 
-
         <button
             type="button"
             class="remove-btn"
             onclick="removeRow(this)">
             ❌
         </button>
-
     `;
-
     container.appendChild(row);
-
 }
 
-function removeRow(button){
-
-    const row =
-        button.parentElement;
-
-    row.remove();
-
+function removeRow(button) {
+    const row = button.parentElement;
+    if (row) row.remove();
 }
 
-</script>
-
-<script>
-
-function viewRecipe(){
-
-    const id =
-        document.getElementById(
-            "recipeSelect"
-        ).value;
-
-    window.location.href =
-        "/recipe/" + id;
+function viewRecipe() {
+    const id = document.getElementById("recipeSelect").value;
+    window.location.href = "/recipe/" + id;
 }
 
-function manageRecipe(){
-
-    const id =
-        document.getElementById(
-            "recipeSelect"
-        ).value;
-
-    window.location.href =
-        "/admin_recipe/" + id;
+function manageRecipe() {
+    const id = document.getElementById("recipeSelect").value;
+    window.location.href = "/admin_recipe/" + id;
 }
 
-</script>
+function filterRecipes() {
+    const input = document.getElementById("recipeSearch").value.toLowerCase();
+    const select = document.getElementById("recipeSelect");
 
-<script>
-
-function addRow() {
-
-    const container =
-        document.getElementById(
-            "ingredient-container"
-        );
-
-    const row =
-        document.createElement("div");
-
-    row.className =
-        "compact-row";
-
-    row.innerHTML = `
-
-        <input
-            class="compact-name"
-            type="text"
-            name="ingredient_name"
-            placeholder="Ingredient"
-            required>
-
-        <input
-            class="compact-qty"
-            type="number"
-            step="0.01"
-            name="quantity"
-            placeholder="Qty"
-            required>
-
-            <select
-                class="compact-unit"
-                name="unit"
-                required>
-                    <option value="g">Gm(s)</option>
-                    <option value="ml">Ml(s)</option>
-                <option value="Tspn">Tspn (teaspoon)</option>
-                <option value="cup">cup</option>
-            </select>
-
-        <button
-            type="button"
-            class="remove-btn"
-            onclick="removeRow(this)">
-            ❌
-        </button>
-
-    `;
-
-    container.appendChild(row);
-
-}
-
-function removeRow(button){
-
-    button.parentElement.remove();
-
-}
-
-function viewRecipe(){
-
-    let id =
-        document.getElementById(
-            "recipeSelect"
-        ).value;
-
-    window.location.href =
-        "/recipe/" + id;
-
-}
-
-function manageRecipe(){
-
-    let id =
-        document.getElementById(
-            "recipeSelect"
-        ).value;
-
-    window.location.href =
-        "/admin_recipe/" + id;
-
-}
-function filterRecipes(){
-
-    let input =
-        document.getElementById(
-            "recipeSearch"
-        ).value.toLowerCase();
-
-    let select =
-        document.getElementById(
-            "recipeSelect"
-        );
-
-    for(let i = 0; i < select.options.length; i++){
-
-        let text =
-            select.options[i].text.toLowerCase();
-
-        if(text.includes(input)){
-
+    for (let i = 0; i < select.options.length; i++) {
+        const text = select.options[i].text.toLowerCase();
+        if (text.includes(input)) {
             select.selectedIndex = i;
             break;
-
         }
     }
-
 }
-
 </script>
 
 {% endblock %}

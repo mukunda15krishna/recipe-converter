@@ -40,10 +40,12 @@
                     Gm(s)
                 {% elif unit == 'ml' %}
                     Ml(s)
+                {% elif unit == 'pcs' %}
+                    Pcs
                 {% elif unit == 'tspn' %}
                     Tspn (teaspoon)
-                {% elif unit == 'cup' %}
-                    cup
+                {% elif unit == 'cup(s)' %}
+                    cup(s)
                 {% else %}
                     {{ ingredient.unit }}
                 {% endif %}

@@ -20,6 +20,10 @@ class Recipe(Base):
 
     name = Column(String, unique=True)
 
+    output_quantity = Column(Float, nullable=True, default=0)
+
+    output_unit = Column(String, nullable=True, default="g")
+
     notes = Column(
         Text,
         nullable=True

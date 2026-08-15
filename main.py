@@ -455,11 +455,29 @@ def edit_recipe(recipe_id: int):
     <form action="/update_recipe/{recipe.id}"
           method="post">
 
+        <label>Recipe Name</label>
         <input
             type="text"
             name="recipe_name"
             value="{recipe.name}"
             required>
+
+        <br><br>
+
+        <label>Output Amount</label>
+        <input
+            type="number"
+            step="0.01"
+            name="output_quantity"
+            value="{recipe.output_quantity or 0}">
+
+        <select name="output_unit">
+            <option value="g" {'selected' if (recipe.output_unit or 'g').lower() == 'g' else ''}>Gm(s)</option>
+            <option value="ml" {'selected' if (recipe.output_unit or 'g').lower() == 'ml' else ''}>ml(s)</option>
+            <option value="pcs" {'selected' if (recipe.output_unit or 'g').lower() == 'pcs' else ''}>Pcs</option>
+            <option value="Tspn" {'selected' if (recipe.output_unit or 'g').lower() == 'tspn' else ''}>Tspn (teaspoon)</option>
+            <option value="cup(s)" {'selected' if (recipe.output_unit or 'g').lower() == 'cup(s)' else ''}>cup(s)</option>
+        </select>
 
         <br><br>
 
@@ -476,7 +494,9 @@ def edit_recipe(recipe_id: int):
 @app.post("/update_recipe/{recipe_id}")
 def update_recipe(
     recipe_id: int,
-    recipe_name: str = Form(...)
+    recipe_name: str = Form(...),
+    output_quantity: float = Form(0),
+    output_unit: str = Form("g")
 ):
 
     db = SessionLocal()
@@ -488,6 +508,8 @@ def update_recipe(
     ).first()
 
     recipe.name = recipe_name
+    recipe.output_quantity = output_quantity
+    recipe.output_unit = output_unit or "g"
 
     db.commit()
 
@@ -638,9 +660,9 @@ def edit_ingredient(ingredient_id: int):
 
     <select name="unit" required>
         <option value="g" {selected_g}>Gm(s)</option>
-        <option value="ml" {selected_ml}>Ml(s)</option>
+        <option value="ml" {selected_ml}>ml(s)</option>
         <option value="Tspn" {selected_tspn}>Tspn (teaspoon)</option>
-        <option value="cup" {selected_cup}>cup</option>
+        <option value="cup" {selected_cup}>cup(s)</option>
     </select>
 
     <br><br>
@@ -690,7 +712,9 @@ def add_ingredient(
 
 @app.post("/create_recipe")
 def create_recipe(
-    recipe_name: str = Form(...)
+    recipe_name: str = Form(...),
+    output_quantity: float = Form(0),
+    output_unit: str = Form("g")
 ):
     db = SessionLocal()
 
@@ -717,7 +741,9 @@ def create_recipe(
         )
 
     recipe = Recipe(
-        name=recipe_name
+        name=recipe_name,
+        output_quantity=output_quantity,
+        output_unit=output_unit or "g"
     )
 
     db.add(recipe)
@@ -746,9 +772,16 @@ def add_ingredient_admin(
     recipe_id: int = Form(...),
     ingredient_name: List[str] = Form(...),
     quantity: List[float] = Form(...),
-    unit: List[str] = Form(...)
+    unit: List[str] = Form(...),
+    output_quantity: float = Form(0),
+    output_unit: str = Form("g")
 ):
     db = SessionLocal()
+
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    if recipe is not None:
+        recipe.output_quantity = output_quantity
+        recipe.output_unit = output_unit or "g"
 
     existing_ingredients = db.query(
         Ingredient
@@ -832,8 +865,15 @@ def admin_recipe(
     recipe = db.query(Recipe).filter(
         Recipe.id == recipe_id
     ).first()
-
-    
+    if recipe is None:
+        db.close()
+        return HTMLResponse(
+            f"""
+            <h2>Recipe Not Found</h2>
+            <p>No recipe with id {recipe_id} exists.</p>
+            <a href="/admin">Back to Admin</a>
+            """
+        )
 
     return templates.TemplateResponse(
         request=request,

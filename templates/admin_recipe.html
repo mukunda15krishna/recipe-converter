@@ -2,69 +2,104 @@
 
 {% block content %}
 
-<div class="card">
+<div class="manage-layout">
 
-    <h1>
-        🛠 Manage Recipe
-    </h1>
+    <div class="card">
 
-    <h2>
-        {{ recipe.name }}
-    </h2>
+        <h1>
+            🛠 Manage Recipe
+        </h1>
 
-    <br>
+        <h2>
+            {{ recipe.name }}
+        </h2>
 
-<a href="/edit_recipe/{{ recipe.id }}">
-    <button class="small-btn">
-        ✏️ Edit Recipe Name
-    </button>
-</a>
+        <p>
+            <strong>Recipe Output:</strong>
+            {% if recipe.output_quantity %}
+                {{ recipe.output_quantity }} {{ recipe.output_unit or 'g' }}
+            {% else %}
+                Not set yet
+            {% endif %}
+        </p>
 
-    
+        <form action="/update_recipe/{{ recipe.id }}" method="post" style="margin-top: 12px;">
+            <label>Set Output Amount</label>
+            <div class="compact-row">
+                <input
+                    class="compact-qty"
+                    type="number"
+                    step="0.01"
+                    name="output_quantity"
+                    value="{{ recipe.output_quantity or 0 }}">
 
-    <br>
-<a
-    href="/delete_recipe/{{ recipe.id }}"
-    onclick="return confirm('Are you sure you want to delete this recipe?')">
-    <button class="delete-btn">
-        🗑️ Delete Recipe
-    </button>
-</a>
+                <select
+                    class="compact-unit"
+                    name="output_unit">
+                    <option value="g" {% if (recipe.output_unit or 'g')|lower == 'g' %}selected{% endif %}>Gm(s)</option>
+                    <option value="ml" {% if (recipe.output_unit or 'g')|lower == 'ml' %}selected{% endif %}>Ml(s)</option>
+                    <option value="pcs" {% if (recipe.output_unit or 'g')|lower == 'pcs' %}selected{% endif %}>Pcs</option>
+                    <option value="Tspn" {% if (recipe.output_unit or 'g')|lower == 'tspn' %}selected{% endif %}>Tspn (teaspoon)</option>
+                    <option value="cup(s)" {% if (recipe.output_unit or 'g')|lower == 'cup(s)' %}selected{% endif %}>cup(s)</option>
+                </select>
+            </div>
+            <input type="hidden" name="recipe_name" value="{{ recipe.name }}">
+            <button type="submit" class="small-btn manage-action-btn primary-action">💾 Save Output</button>
+        </form>
 
-</div>
+        <div class="manage-action-stack">
+            <a href="/edit_recipe/{{ recipe.id }}">
+                <button class="small-btn manage-action-btn secondary-action">
+                    ✏️ Edit Recipe Name
+                </button>
+            </a>
 
-<div class="card">  
+            <a
+                href="/delete_recipe/{{ recipe.id }}"
+                onclick="return confirm('Are you sure you want to delete this recipe?')">
+                <button class="delete-btn manage-action-btn danger-action">
+                    🗑️ Delete Recipe
+                </button>
+            </a>
+        </div>
 
-    <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-">
+    </div>
 
-    <h2>
-        📝 Recipe Notes
-    </h2>
+    <div class="card notes-panel">
 
-    <a href="/edit_notes/{{ recipe.id }}">
-        <button class="small-btn">
-            ✏️ Edit Notes
-        </button>
-    </a>
+        <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    ">
 
-</div>
-    
+        <h2>
+            📝 Recipe Notes
+        </h2>
 
-<form
-        action="/submit_note_request"
-        method="post"
->
+        <a href="/edit_notes/{{ recipe.id }}">
+            <button class="small-btn">
+                ✏️ Edit Notes
+            </button>
+        </a>
 
-    <textarea
-        name="note_content"
-        class="suggestion-editor"
-        Required
+    </div>
+
+    <form
+            action="/submit_note_request"
+            method="post"
+            style="display:flex; flex:1;"
+    >
+
+        <textarea
+            name="note_content"
+            class="suggestion-editor"
+            required
         >{{ recipe.notes or "No notes available" }}</textarea>
-    
+
+    </form>
+
+    </div>
 
 </div>
 
@@ -92,17 +127,19 @@
             <td>{{ ingredient.quantity }}</td>
 
             <td>
-                {% set unit = ingredient.unit|lower %}
+                {% set unit = ingredient.unit|lower if ingredient.unit else '' %}
                 {% if unit == 'g' %}
                     Gm(s)
                 {% elif unit == 'ml' %}
                     ml(s)
+                {% elif unit == 'pcs' %}
+                    Pcs
                 {% elif unit == 'tspn' %}
                     Tspn (teaspoon)
-                {% elif unit == 'cup' %}
-                    cup
+                {% elif unit == 'cup(s)' %}
+                    cup(s)
                 {% else %}
-                    {{ ingredient.unit }}
+                    {{ ingredient.unit or '—' }}
                 {% endif %}
             </td>
 

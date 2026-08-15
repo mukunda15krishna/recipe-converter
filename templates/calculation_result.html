@@ -23,10 +23,12 @@
                     {{ item.quantity }} Gm(s)
                 {% elif unit == 'ml' %}
                     {{ item.quantity }} Ml(s)
+                {% elif unit == 'pcs' %}
+                    {{ item.quantity }} Pcs
                 {% elif unit == 'tspn' %}
                     {{ item.quantity }} Tspn (teaspoon)
-                {% elif unit == 'cup' %}
-                    {{ item.quantity }} cup
+                {% elif unit == 'cup(s)' %}
+                    {{ item.quantity }} cup(s)
                 {% else %}
                     {{ item.quantity }} {{ item.unit }}
                 {% endif %}
