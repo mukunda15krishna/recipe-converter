@@ -17,7 +17,20 @@
 
         <tr>
             <td>{{ item.name }}</td>
-            <td>{{ item.quantity }} {{ item.unit }}</td>
+            <td>
+                {% set unit = item.unit|lower %}
+                {% if unit == 'g' %}
+                    {{ item.quantity }} Gm(s)
+                {% elif unit == 'ml' %}
+                    {{ item.quantity }} Ml(s)
+                {% elif unit == 'tspn' %}
+                    {{ item.quantity }} Tspn (teaspoon)
+                {% elif unit == 'cup' %}
+                    {{ item.quantity }} cup
+                {% else %}
+                    {{ item.quantity }} {{ item.unit }}
+                {% endif %}
+            </td>
         </tr>
 
         {% endfor %}

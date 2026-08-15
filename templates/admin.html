@@ -95,12 +95,15 @@
             placeholder="Qty"
             required>
 
-        <input
+        <select
             class="compact-unit"
-            type="text"
             name="unit"
-            placeholder="Unit"
             required>
+            <option value="g">Gm(s)</option>
+            <option value="ml">Ml(s)</option>
+            <option value="Tspn">Tspn (teaspoon)</option>
+            <option value="cup">cup</option>
+        </select>
         <button
         type="button"
         class="remove-btn"
@@ -204,12 +207,15 @@ function addRow() {
             placeholder="Qty"
             required>
 
-        <input
+        <select
             class="compact-unit"
-            type="text"
             name="unit"
-            placeholder="Unit"
             required>
+                <option value="g">Gm(s)</option>
+                <option value="ml">Ml(s)</option>
+            <option value="Tspn">Tspn (teaspoon)</option>
+            <option value="cup">cup</option>
+        </select>
 
 
         <button
@@ -294,12 +300,15 @@ function addRow() {
             placeholder="Qty"
             required>
 
-        <input
-            class="compact-unit"
-            type="text"
-            name="unit"
-            placeholder="Unit"
-            required>
+            <select
+                class="compact-unit"
+                name="unit"
+                required>
+                    <option value="g">Gm(s)</option>
+                    <option value="ml">Ml(s)</option>
+                <option value="Tspn">Tspn (teaspoon)</option>
+                <option value="cup">cup</option>
+            </select>
 
         <button
             type="button"

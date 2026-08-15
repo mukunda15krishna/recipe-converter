@@ -37,9 +37,13 @@
             <td>
                 {% set unit = ingredient.unit|lower %}
                 {% if unit == 'g' %}
-                    grms
+                    Gm(s)
                 {% elif unit == 'ml' %}
-                    mls
+                    Ml(s)
+                {% elif unit == 'tspn' %}
+                    Tspn (teaspoon)
+                {% elif unit == 'cup' %}
+                    cup
                 {% else %}
                     {{ ingredient.unit }}
                 {% endif %}

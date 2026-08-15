@@ -596,6 +596,11 @@ def edit_ingredient(ingredient_id: int):
         Ingredient.id == ingredient_id
     ).first()
 
+    selected_g = 'selected' if (ingredient.unit or '').lower() == 'g' else ''
+    selected_ml = 'selected' if (ingredient.unit or '').lower() == 'ml' else ''
+    selected_tspn = 'selected' if (ingredient.unit or '').lower() == 'tspn' else ''
+    selected_cup = 'selected' if (ingredient.unit or '').lower() == 'cup' else ''
+
     html = f"""
     <h1>Edit Ingredient</h1>
 
@@ -631,11 +636,12 @@ def edit_ingredient(ingredient_id: int):
 
     <br>
 
-    <input
-        type="text"
-        name="unit"
-        value="{ingredient.unit}"
-        required>
+    <select name="unit" required>
+        <option value="g" {selected_g}>Gm(s)</option>
+        <option value="ml" {selected_ml}>Ml(s)</option>
+        <option value="Tspn" {selected_tspn}>Tspn (teaspoon)</option>
+        <option value="cup" {selected_cup}>cup</option>
+    </select>
 
     <br><br>
 
